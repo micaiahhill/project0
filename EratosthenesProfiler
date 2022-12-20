@@ -1,0 +1,61 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+public class EratosthenesProfiler {
+    
+    public static void main(String[] args) 
+	{
+            //first part of the question
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("Enter an integer n to generate primes in [2,n]");
+		long n = sc.nextLong(); //taking long number as input
+		
+		EratosthenesUtil util = new EratosthenesUtil(); //EratosthenesClass object
+			
+		long start = System.nanoTime(); //START TIME
+		ArrayList<Long> li = util.sieve(n); //CALCULATING SIEVE
+		long end = System.nanoTime(); //END TIME
+		long microseconds = (end - start) / 1000; //Total time in microseconds
+			
+		String primes = util.toString(li);  //getting string of primes
+		
+		System.out.print("List of all primes in the range 2 and n is : ");
+		System.out.println(primes); //printing primes
+	        System.out.println("Time to Generate the Primes: " + microseconds + " microseconds"); //printing time
+		
+	
+		double[] exact = new double[15]; //exact time
+		double[] approx = new double[15]; //approximate time
+		double[] error = new double[15]; //error
+		
+		int j = 0;
+		for(long i = 10000; i <= 150000; i+=10000) {
+
+			start = System.nanoTime(); //START TIME
+			
+			ArrayList<Long> list = util.sieve(i); //CALCULATING SIEVE
+			
+			end = System.nanoTime();//END TIME
+			
+			microseconds = (end - start) / 1000; //Total time in microseconds
+			
+			exact[j] = microseconds; //exact time
+			
+			approx[j] = i/Math.log(i); //approximate time
+			
+			error[j] = ((approx[j] - exact[j])/exact[j]) * 100; //error
+			
+			j++;
+		}
+	
+		j=0;
+		//printing the table
+		System.out.println("n" + "\t" + "Time(us)" + "\t" + "n/ln(n)" +  "\t" + "                  %Error in pi(n)");
+		
+		for(int i = 10000; i <= 150000; i+=10000) {
+			System.out.println(i + "\t" + exact[j] + "\t\t" + approx[j] +  "\t" + error[j]);
+			j++;
+		}
+		
+	}
+}
